@@ -29,8 +29,8 @@ class UserSeeder extends Seeder
         $admin->assignRole('Admin');
 
         $user = User::create([
-            'name' => 'User',
-            'email' => 'user@mail.com',
+            'name' => 'Operator',
+            'email' => 'operator@mail.com',
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
             'two_factor_secret' => null,
@@ -40,10 +40,10 @@ class UserSeeder extends Seeder
             'current_team_id' => null,
         ]);
 
-        $user->assignRole('User');
+        $user->assignRole('Operator');
 
         User::factory(20)->create()->each(function ($user) {
-            $user->assignRole('User');
+            $user->assignRole('Operator');
         });
     }
 }
