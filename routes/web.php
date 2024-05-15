@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Patient\CreatePatient;
 use App\Livewire\Patient\IndexPatient;
 use Illuminate\Support\Facades\Route;
 
@@ -18,5 +19,6 @@ Route::middleware([
 
     Route::prefix('patient')->name('patient.')->group(function () {
         Route::get('/', IndexPatient::class)->name('index');
+        Route::get('/create', CreatePatient::class)->name('create');
     });
 });
