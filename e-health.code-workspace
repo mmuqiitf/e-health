@@ -1,0 +1,19 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "[php]": {
+            "editor.defaultFormatter": "open-southeners.laravel-pint"
+        },
+        "[blade]": {
+            "editor.defaultFormatter": "shufo.vscode-blade-formatter"
+        },
+        "laravel-pint.enable": true,
+        "laravel-pint.preset": "laravel",
+        "laravel-pint.executablePath": "vendor/bin/pint",
+        "laravel-pint.configPath": "pint.json"
+    }
+}
