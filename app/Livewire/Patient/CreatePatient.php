@@ -26,6 +26,10 @@ class CreatePatient extends Component
 
     public string $religion;
 
+    public string $phone;
+
+    public string $email;
+
     public function rules(): array
     {
         return [
@@ -33,6 +37,8 @@ class CreatePatient extends Component
             'medical_record_id' => ['required', 'string', Rule::unique('patients', 'medical_record_id')],
             'name' => ['required', 'string'],
             'birth_place' => ['required', 'string'],
+            'phone' => ['required', 'string'],
+            'email' => ['required', 'email', Rule::unique('patients', 'email')],
             'birthday' => ['required', 'date'],
             'gender' => ['required', 'in:Male,Female'],
             'address' => ['required', 'string'],
@@ -63,10 +69,12 @@ class CreatePatient extends Component
             'gender' => $this->gender,
             'address' => $this->address,
             'religion' => $this->religion,
+            'phone' => $this->phone,
+            'email' => $this->email,
         ]);
 
         $this->reset();
 
-        return redirect()->to('/patient');
+        return $this->redirect('/patient', navigate: true);
     }
 }

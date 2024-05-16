@@ -10,11 +10,10 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
                 <div class="flex justify-end">
-                    <x-button :href="route('patient.create')" wire:navigate icon="plus-circle" primary label="Add" />
+                    <x-wire-button :href="route('patient.create')" wire:navigate icon="plus-circle" primary label="Add" />
                 </div>
                 <livewire:patient-table />
             </div>
         </div>
     </div>
-
 </div>

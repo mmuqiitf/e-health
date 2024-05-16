@@ -21,6 +21,8 @@ return new class extends Migration
             $table->enum('gender', ['Male', 'Female'])->default('Male');
             $table->text('address');
             $table->enum('religion', ['Islam', 'Christian', 'Catholic', 'Hindu', 'Buddha', 'Konghucu', 'Others'])->default('Islam');
+            $table->string('email')->unique();
+            $table->string('phone', 25)->unique();
             $table->timestamps();
         });
     }

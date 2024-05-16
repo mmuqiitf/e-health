@@ -37,7 +37,7 @@ final class PatientTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Patient::query();
+        return Patient::query()->latest();
     }
 
     public function relationSearch(): array
@@ -48,7 +48,6 @@ final class PatientTable extends PowerGridComponent
     public function fields(): PowerGridFields
     {
         return PowerGrid::fields()
-            ->add('id')
             ->add('name')
             ->add('medical_record_id')
             ->add('nik')
@@ -63,7 +62,6 @@ final class PatientTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('ID', 'id'),
             Column::make('Name', 'name')
                 ->sortable()
                 ->searchable(),
@@ -114,13 +112,13 @@ final class PatientTable extends PowerGridComponent
     #[\Livewire\Attributes\On('edit')]
     public function edit($rowId): void
     {
-        $this->js('alert('.$rowId.')');
+        $this->redirect("/patient/{$rowId}/edit", true);
     }
 
     #[\Livewire\Attributes\On('delete')]
     public function delete($rowId): void
     {
-        $this->js('alert('.$rowId.')');
+        Patient::find($rowId)->delete();
     }
 
     public function actions(Patient $row): array
@@ -136,7 +134,7 @@ final class PatientTable extends PowerGridComponent
                 ->slot('Delete')
                 ->id()
                 ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
-                ->method('delete', ['rowId' => $row->id]),
+                ->dispatch('delete', ['rowId' => $row->id]),
         ];
     }
 

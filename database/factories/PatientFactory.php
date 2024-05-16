@@ -25,6 +25,8 @@ class PatientFactory extends Factory
             'gender' => $this->faker->randomElement(['Male', 'Female']),
             'address' => $this->faker->address,
             'religion' => $this->faker->randomElement(['Islam', 'Christian', 'Catholic', 'Hindu', 'Buddha', 'Konghucu', 'Others']),
+            'phone' => $this->faker->phoneNumber,
+            'email' => $this->faker->unique()->safeEmail,
         ];
     }
 }

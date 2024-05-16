@@ -20,6 +20,8 @@
 </head>
 
 <body class="font-sans antialiased">
+    <x-wire-notifications position="top-right" z-index="z-999" />
+
     <x-banner />
 
     <div class="min-h-screen bg-gray-100">
