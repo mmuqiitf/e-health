@@ -3,14 +3,14 @@
 namespace App\Livewire;
 
 use App\Enum\AppointmentStatusEnum;
-use App\Models\Appointment;
+use App\Enum\PaymentMethodEnum;
+use App\Enum\PaymentStatusEnum;
+use App\Models\Payment;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Carbon;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
-use PowerComponents\LivewirePowerGrid\Facades\Rule;
 use PowerComponents\LivewirePowerGrid\Footer;
 use PowerComponents\LivewirePowerGrid\Header;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
@@ -18,7 +18,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
-final class AppointmentTable extends PowerGridComponent
+final class PaymentTable extends PowerGridComponent
 {
     use WithExport;
 
@@ -39,14 +39,13 @@ final class AppointmentTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Appointment::query()->with(['patient', 'clinic', 'payment'])->latest();
+        return Payment::query()->with(['appointment' => ['clinic', 'patient']]);
     }
 
     public function relationSearch(): array
     {
         return [
-            'patient' => ['name'],
-            'clinic' => ['name'],
+            'appointment' => ['schedule', 'clinic' => ['name'], 'patient' => ['name']],
         ];
     }
 
@@ -54,12 +53,15 @@ final class AppointmentTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('patient_id')
-            ->add('patient.name')
-            ->add('clinic_id')
-            ->add('clinic.name')
-            ->add('schedule_formatted', fn (Appointment $model) => Carbon::parse($model->schedule)->format('d/m/Y H:i:s'))
-            ->add('complaint')
+            ->add('appointment_id')
+            ->add('appointment.clinic.name')
+            ->add('appointment.patient.name')
+            ->add('appointment.schedule')
+            ->add('amount')
+            ->add('status')
+            ->add('method')
+            ->add('card_number')
+            ->add('note')
             ->add('created_at');
     }
 
@@ -67,19 +69,33 @@ final class AppointmentTable extends PowerGridComponent
     {
         return [
             Column::make('Id', 'id'),
-            Column::make('Patient', 'patient.name', 'patient.name')
-                ->searchable(),
-            Column::make('Clinic', 'clinic.name', 'clinic.name')
+
+            Column::make('Schedule', 'appointment.schedule', 'appointment.schedule')
                 ->searchable(),
 
-            Column::make('Schedule', 'schedule_formatted', 'schedule')
-                ->sortable(),
+            Column::make('Patient', 'appointment.patient.name', 'appointment.patient.name')
+                ->searchable(),
+
+            Column::make('Clinic', 'appointment.clinic.name', 'appointment.clinic.name')
+                ->searchable(),
+
+            Column::make('Amount', 'amount')
+                ->sortable()
+                ->searchable(),
 
             Column::make('Status', 'status')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Complaint', 'complaint')
+            Column::make('Method', 'method')
+                ->sortable()
+                ->searchable(),
+
+            Column::make('Card number', 'card_number')
+                ->sortable()
+                ->searchable(),
+
+            Column::make('Note', 'note')
                 ->sortable()
                 ->searchable(),
 
@@ -94,52 +110,33 @@ final class AppointmentTable extends PowerGridComponent
     public function filters(): array
     {
         return [
-            Filter::multiSelectAsync('patient.name', 'patient_id')
-                ->url(route('api.patient.index'))
-                ->optionValue('id')
-                ->optionLabel('name'),
-            Filter::multiSelectAsync('clinic.name', 'clinic_id')
-                ->url(route('api.clinic.index'))
-                ->optionValue('id')
-                ->optionLabel('name'),
-            Filter::datetimepicker('schedule'),
-            Filter::enumSelect('status')->dataSource(AppointmentStatusEnum::cases())->optionLabel('name')->optionValue('value'),
+            Filter::datetimepicker('appointment.schedule')->filterRelation('appointment', 'schedule'),
+            Filter::enumSelect('status')->dataSource(PaymentStatusEnum::cases())->optionLabel('name')->optionValue('value'),
+            Filter::enumSelect('method')->dataSource(PaymentMethodEnum::cases())->optionLabel('name')->optionValue('value'),
         ];
     }
 
     #[\Livewire\Attributes\On('edit')]
     public function edit($rowId): void
     {
-        $this->redirect("/appointment/{$rowId}/edit", true);
-    }
-
-    #[\Livewire\Attributes\On('payment')]
-    public function payment($rowId): void
-    {
-        $this->redirect("/appointment/{$rowId}/payment", true);
+        $this->redirect("/payment/{$rowId}/edit", true);
     }
 
     #[\Livewire\Attributes\On('delete')]
     public function delete($rowId): void
     {
-        $appointment = Appointment::with(['payment'])->find($rowId);
+        $payment = Payment::with(['appointment'])->find($rowId);
 
-        if ($appointment->payment) {
-            $appointment->payment->delete();
-        }
+        $payment->appointment->update([
+            'status' => AppointmentStatusEnum::Approved->value,
+        ]);
 
-        $appointment->delete();
+        $payment->delete();
     }
 
-    public function actions(Appointment $row): array
+    public function actions(Payment $row): array
     {
         return [
-            Button::add('payment')
-                ->slot('Payment')
-                ->id()
-                ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
-                ->dispatch('payment', ['rowId' => $row->id]),
-
             Button::add('edit')
                 ->slot('Edit')
                 ->id()
@@ -154,12 +151,15 @@ final class AppointmentTable extends PowerGridComponent
         ];
     }
 
+    /*
     public function actionRules($row): array
     {
-        return [
-            Rule::button('payment')
-                ->when(fn ($row) => $row->status != AppointmentStatusEnum::Approved->value)
+       return [
+            // Hide button edit for ID 1
+            Rule::button('edit')
+                ->when(fn($row) => $row->id === 1)
                 ->hide(),
         ];
     }
+    */
 }

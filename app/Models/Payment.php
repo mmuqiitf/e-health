@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Enum\PaymentMethodEnum;
-use App\Enum\PaymentStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,11 +16,6 @@ class Payment extends Model
         'method',
         'card_number',
         'note',
-    ];
-
-    protected $casts = [
-        'status' => PaymentStatusEnum::class,
-        'method' => PaymentMethodEnum::class,
     ];
 
     public function appointment()

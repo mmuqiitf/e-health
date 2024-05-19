@@ -9,6 +9,6 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('/clinics', [ClinicController::class, 'index'])->name('api.clinics.index');
+Route::get('/clinic', [ClinicController::class, 'index'])->name('api.clinic.index');
 
-Route::get('/patients', [PatientController::class, 'index'])->name('api.patients.index');
+Route::get('/patient', [PatientController::class, 'index'])->name('api.patient.index');

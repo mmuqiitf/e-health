@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('clinic_id')->constrained()->onDelete('cascade');
             $table->dateTime('schedule');
             $table->string('complaint');
-            $table->enum('status', ['Waiting', 'Approved', 'Rejected', 'Cancel'])->default('Waiting');
+            $table->enum('status', ['Waiting', 'Approved', 'Rejected', 'Cancel', 'Paid'])->default('Waiting');
             $table->timestamps();
         });
     }

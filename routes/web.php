@@ -1,11 +1,14 @@
 <?php
 
-use App\Livewire\Appoinment\CreateAppointment;
-use App\Livewire\Appoinment\EditAppointment;
-use App\Livewire\Appoinment\IndexAppointment;
+use App\Livewire\Appointment\CreateAppointment;
+use App\Livewire\Appointment\CreatePayment;
+use App\Livewire\Appointment\EditAppointment;
+use App\Livewire\Appointment\IndexAppointment;
 use App\Livewire\Patient\CreatePatient;
 use App\Livewire\Patient\EditPatient;
 use App\Livewire\Patient\IndexPatient;
+use App\Livewire\Payment\EditPayment;
+use App\Livewire\Payment\IndexPayment;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -31,6 +34,12 @@ Route::middleware([
         Route::get('/', IndexAppointment::class)->name('index');
         Route::get('/create', CreateAppointment::class)->name('create');
         Route::get('/{id}/edit', EditAppointment::class)->name('edit');
+        Route::get('/{id}/payment', CreatePayment::class)->name('payment');
+    });
+
+    Route::prefix('payment')->name('payment.')->group(function () {
+        Route::get('/', IndexPayment::class)->name('index');
+        Route::get('/{id}/edit', EditPayment::class)->name('edit');
     });
 
 });

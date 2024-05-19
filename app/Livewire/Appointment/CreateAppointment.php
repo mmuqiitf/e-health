@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Appoinment;
+namespace App\Livewire\Appointment;
 
 use App\Enum\AppointmentStatusEnum;
 use App\Models\Appointment;
@@ -41,7 +41,7 @@ class CreateAppointment extends Component
             ];
         }, AppointmentStatusEnum::cases());
 
-        return view('livewire.appoinment.create-appointment', compact('appointmentStatuses'));
+        return view('livewire.appointment.create-appointment', compact('appointmentStatuses'));
     }
 
     public function store()

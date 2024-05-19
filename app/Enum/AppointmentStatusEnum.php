@@ -8,4 +8,5 @@ enum AppointmentStatusEnum: string
     case Approved = 'Approved';
     case Rejected = 'Rejected';
     case Cancel = 'Cancel';
+    case Paid = 'Paid';
 }
