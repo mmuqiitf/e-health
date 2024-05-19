@@ -27,6 +27,7 @@ class EditPayment extends Component
     #[Layout('layouts.app')]
     public function render()
     {
+        $this->authorize('update', $this->payment);
         $paymentMethods = array_map(function ($paymentMethod) {
             return [
                 'value' => $paymentMethod->value,
@@ -39,6 +40,7 @@ class EditPayment extends Component
 
     public function update()
     {
+        $this->authorize('update', $this->payment);
         $this->validate();
 
         $this->payment->update([

@@ -22,7 +22,7 @@ class PaymentForm extends Form
             'method' => ['required', 'string', Rule::enum(PaymentMethodEnum::class)],
             'card_number' => [Rule::requiredIf(function () {
                 return $this->method === PaymentMethodEnum::Credit->value || $this->method === PaymentMethodEnum::Debit->value;
-            }), 'string'],
+            })],
             'amount' => ['required', 'numeric'],
             'note' => ['nullable', 'string'],
         ];

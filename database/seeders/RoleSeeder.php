@@ -17,5 +17,17 @@ class RoleSeeder extends Seeder
         foreach ($roles as $role) {
             Role::create(['name' => $role]);
         }
+
+        Role::findByName('Operator')->givePermissionTo([
+            'create_payment',
+            'read_payment',
+            'update_payment',
+            'delete_payment',
+            'create_appointment',
+            'read_appointment',
+            'update_appointment',
+            'delete_appointment',
+            'payment_appointment',
+        ]);
     }
 }

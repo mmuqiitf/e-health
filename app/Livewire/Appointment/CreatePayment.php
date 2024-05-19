@@ -24,6 +24,7 @@ class CreatePayment extends Component
     #[Layout('layouts.app')]
     public function render()
     {
+        $this->authorize('payment', $this->appointment);
         $paymentMethods = array_map(function ($paymentMethod) {
             return [
                 'value' => $paymentMethod->value,
@@ -36,6 +37,7 @@ class CreatePayment extends Component
 
     public function store()
     {
+        $this->authorize('payment', $this->appointment);
         $this->validate();
 
         // check if the appointment has been paid
@@ -49,8 +51,8 @@ class CreatePayment extends Component
         $this->appointment->payment()->create([
             'amount' => $this->form->amount,
             'method' => $this->form->method,
-            'card_number' => $this->form->card_number,
-            'note' => $this->form->note,
+            'card_number' => $this->form?->card_number ?? null,
+            'note' => $this->form?->note ?? null,
             'status' => PaymentStatusEnum::Success->value,
         ]);
 

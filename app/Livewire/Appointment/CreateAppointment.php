@@ -34,18 +34,24 @@ class CreateAppointment extends Component
     #[Layout('layouts.app')]
     public function render()
     {
+        $this->authorize('create', Appointment::class);
+        $appointmentStatuses = array_filter(AppointmentStatusEnum::cases(), function ($appointmentCase) {
+            return $appointmentCase->value !== AppointmentStatusEnum::Paid->value;
+        });
+
         $appointmentStatuses = array_map(function ($appointmentCase) {
             return [
                 'value' => $appointmentCase->value,
                 'name' => $appointmentCase->name,
             ];
-        }, AppointmentStatusEnum::cases());
+        }, $appointmentStatuses);
 
         return view('livewire.appointment.create-appointment', compact('appointmentStatuses'));
     }
 
     public function store()
     {
+        $this->authorize('create', Appointment::class);
         $this->validate();
 
         // Store the appointment

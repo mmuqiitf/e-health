@@ -67,6 +67,8 @@ class EditPatient extends Component
     #[Layout('layouts.app')]
     public function render()
     {
+        $this->authorize('update', $this->patient);
+
         $religions = array_map(function ($religionCase) {
             return $religionCase->value;
         }, ReligionEnum::cases());
@@ -76,6 +78,7 @@ class EditPatient extends Component
 
     public function update()
     {
+        $this->authorize('update', $this->patient);
         $this->validate();
 
         $this->patient->update([

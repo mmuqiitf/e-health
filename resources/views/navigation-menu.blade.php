@@ -15,15 +15,21 @@
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link href="{{ route('patient.index') }}" :active="request()->routeIs('patient.*')">
-                        {{ __('Patient') }}
-                    </x-nav-link>
-                    <x-nav-link href="{{ route('appointment.index') }}" :active="request()->routeIs('appointment.*')">
-                        {{ __('Appointment') }}
-                    </x-nav-link>
-                    <x-nav-link href="{{ route('payment.index') }}" :active="request()->routeIs('payment.*')">
-                        {{ __('Payment') }}
-                    </x-nav-link>
+                    @can('read_patient')
+                        <x-nav-link href="{{ route('patient.index') }}" :active="request()->routeIs('patient.*')">
+                            {{ __('Patient') }}
+                        </x-nav-link>
+                    @endcan
+                    @can('read_appointment')
+                        <x-nav-link href="{{ route('appointment.index') }}" :active="request()->routeIs('appointment.*')">
+                            {{ __('Appointment') }}
+                        </x-nav-link>
+                    @endcan
+                    @can('read_payment')
+                        <x-nav-link href="{{ route('payment.index') }}" :active="request()->routeIs('payment.*')">
+                            {{ __('Payment') }}
+                        </x-nav-link>
+                    @endcan
                 </div>
             </div>
 

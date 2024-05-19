@@ -49,6 +49,8 @@ class CreatePatient extends Component
     #[Layout('layouts.app')]
     public function render()
     {
+        $this->authorize('create', Patient::class);
+
         $religions = array_map(function ($religionCase) {
             return $religionCase->value;
         }, ReligionEnum::cases());
@@ -58,6 +60,7 @@ class CreatePatient extends Component
 
     public function store()
     {
+        $this->authorize('create', Patient::class);
         $this->validate();
 
         Patient::create([

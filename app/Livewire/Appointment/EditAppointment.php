@@ -47,18 +47,24 @@ class EditAppointment extends Component
     #[Layout('layouts.app')]
     public function render()
     {
+        $this->authorize('update', $this->appointment);
+        $appointmentStatuses = array_filter(AppointmentStatusEnum::cases(), function ($appointmentCase) {
+            return $appointmentCase->value !== AppointmentStatusEnum::Paid->value;
+        });
+
         $appointmentStatuses = array_map(function ($appointmentCase) {
             return [
                 'value' => $appointmentCase->value,
                 'name' => $appointmentCase->name,
             ];
-        }, AppointmentStatusEnum::cases());
+        }, $appointmentStatuses);
 
         return view('livewire.appointment.edit-appointment', compact('appointmentStatuses'));
     }
 
     public function update()
     {
+        $this->authorize('update', $this->appointment);
         $this->validate();
 
         $this->appointment->update([
