@@ -1,5 +1,7 @@
 <?php
 
+use App\Livewire\Appoinment\CreateAppointment;
+use App\Livewire\Appoinment\EditAppointment;
 use App\Livewire\Appoinment\IndexAppointment;
 use App\Livewire\Patient\CreatePatient;
 use App\Livewire\Patient\EditPatient;
@@ -21,12 +23,14 @@ Route::middleware([
 
     Route::prefix('patient')->name('patient.')->group(function () {
         Route::get('/', IndexPatient::class)->name('index');
-        Route::get('/{id}/edit', EditPatient::class)->name('edit');
         Route::get('/create', CreatePatient::class)->name('create');
+        Route::get('/{id}/edit', EditPatient::class)->name('edit');
     });
 
     Route::prefix('appointment')->name('appointment.')->group(function () {
         Route::get('/', IndexAppointment::class)->name('index');
+        Route::get('/create', CreateAppointment::class)->name('create');
+        Route::get('/{id}/edit', EditAppointment::class)->name('edit');
     });
 
 });

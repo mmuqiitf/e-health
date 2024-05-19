@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enum\AppointmentStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,7 +19,6 @@ class Appointment extends Model
 
     protected $casts = [
         'schedule' => 'datetime',
-        'status' => AppointmentStatusEnum::class,
     ];
 
     public function patient()

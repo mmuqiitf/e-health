@@ -43,7 +43,10 @@ final class AppointmentTable extends PowerGridComponent
 
     public function relationSearch(): array
     {
-        return [];
+        return [
+            'patient' => ['name'],
+            'clinic' => ['name'],
+        ];
     }
 
     public function fields(): PowerGridFields
@@ -51,9 +54,10 @@ final class AppointmentTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('patient_id')
+            ->add('patient.name')
             ->add('clinic_id')
+            ->add('clinic.name')
             ->add('schedule_formatted', fn (Appointment $model) => Carbon::parse($model->schedule)->format('d/m/Y H:i:s'))
-            ->add('status')
             ->add('complaint')
             ->add('created_at');
     }
@@ -62,8 +66,12 @@ final class AppointmentTable extends PowerGridComponent
     {
         return [
             Column::make('Id', 'id'),
-            Column::make('Patient id', 'patient_id'),
-            Column::make('Clinic id', 'clinic_id'),
+            Column::make('Patient', 'patient.name', 'patient.name')
+                ->sortable()
+                ->searchable(),
+            Column::make('Clinic', 'clinic.name', 'clinic.name')
+                ->sortable()
+                ->searchable(),
             Column::make('Schedule', 'schedule_formatted', 'schedule')
                 ->sortable(),
 
@@ -101,17 +109,29 @@ final class AppointmentTable extends PowerGridComponent
     #[\Livewire\Attributes\On('edit')]
     public function edit($rowId): void
     {
-        $this->js('alert('.$rowId.')');
+        $this->redirect("/appointment/{$rowId}/edit", true);
+    }
+
+    #[\Livewire\Attributes\On('delete')]
+    public function delete($rowId): void
+    {
+        Appointment::find($rowId)->delete();
     }
 
     public function actions(Appointment $row): array
     {
         return [
             Button::add('edit')
-                ->slot('Edit: '.$row->id)
+                ->slot('Edit')
                 ->id()
                 ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
                 ->dispatch('edit', ['rowId' => $row->id]),
+
+            Button::add('delete')
+                ->slot('Delete')
+                ->id()
+                ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
+                ->dispatch('delete', ['rowId' => $row->id]),
         ];
     }
 

@@ -18,7 +18,9 @@
                     <x-nav-link href="{{ route('patient.index') }}" :active="request()->routeIs('patient.*')">
                         {{ __('Patient') }}
                     </x-nav-link>
-
+                    <x-nav-link href="{{ route('appointment.index') }}" :active="request()->routeIs('appointment.*')">
+                        {{ __('Appointment') }}
+                    </x-nav-link>
                 </div>
             </div>
 
